@@ -1,0 +1,13 @@
+Codigo de identificação do municipio	
+Nome Municipio que candidato concorre	
+Cod Cargo a que concorre	
+Nome Cargo a que concorre	
+Numero do candidato	
+Nome Candidato	
+Cod Partido	
+Sigla Partido	
+Gênero	
+Cod Escolaridade	
+Nome Escolaridade	
+Cod Ocupação	
+Nome Ocupaçao
