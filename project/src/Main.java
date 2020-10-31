@@ -1,4 +1,3 @@
-package project;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -15,7 +14,7 @@ public class Main {
 
 	private static final int kQTD_REGISTERS = 10000;
 
-	private static final String kREGISTERS_FILE_NAME = "../Data/consulta_cand_2020_RS.csv";
+	private static final String kREGISTERS_FILE_NAME = "./consulta_cand_2020_RS.csv";
 
 	public static void main(String[] args) throws IOException {
 
@@ -24,9 +23,11 @@ public class Main {
 		RandomAccessFile randomAccessFile = null;
 
 		Scanner sc = new Scanner(System.in);
+		
 
 		try {
-			randomAccessFile = new RandomAccessFile(kREGISTERS_FILE_NAME, "rw");	
+			randomAccessFile = new RandomAccessFile(kREGISTERS_FILE_NAME, "rw");
+			System.out.println(randomAccessFile.length());
 
 		} catch (Exception e) {
 
@@ -53,6 +54,7 @@ public class Main {
 				break;
 
 				case kOPC_PESQUISA_BINARIA:
+					System.out.println(randomAccessFile.length());
 					
 				break;
 			}
