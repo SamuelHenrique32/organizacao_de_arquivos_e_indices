@@ -102,9 +102,9 @@ public class Arquivo {
 	    
 	    public void escreve_arquivo() throws IOException {
 	    	dados.seek(0);
-	    	char [] linha = new char[LINE_SIZE + 2];
+	    	char [] linha = new char[LINE_SIZE];
 	    	for(int i = 0; i < QTD_REG ; i++) {
-	    		for(int j = 0; j < LINE_SIZE + 2 ;j++) {
+	    		for(int j = 0; j < LINE_SIZE  ;j++) {
 	    			linha[j] = (char) dados.readByte();
 	    		}
 	    		System.out.println(String.valueOf(linha));
@@ -185,7 +185,7 @@ public class Arquivo {
 	    				  "Candidato a " + campos[3] + "\n" +
 	    				  "Municipio: " + campos[1] + "\n" +
 	    				  "Partido: " + campos[7];
-	    	System.out.println(info);
+	    	System.out.println(info + "\n");
 	    }
 	    
 	    public static String completeToLeft(String value, char c, int size) {
@@ -348,8 +348,10 @@ public class Arquivo {
 	    public void estatistica() throws IOException {
 	    	hashtag1.seek(0);
 	    	hashtag2.seek(0);
+	    	
 	    	String campo1;
 	    	String campo2;
+	    	
 	    	int cont = 0;
 	    	
 	    	long barra = 0;
@@ -358,6 +360,7 @@ public class Arquivo {
 	    	for(long i = 0 ; i < hashtag1.length() ; i+= INDICE_SIZE) {
 	    	
 	    		campo1 = get_indice(i, 0, hashtag1);
+	    		
 	    		int index = busca_binaria_indice_hashtag(Integer.valueOf(campo1), 2);
 	    		if(index != -1) {
 	    			cont++;
@@ -437,7 +440,8 @@ public class Arquivo {
 	    
 	    
 	    public static void main(String[] args) throws FileNotFoundException, IOException, ParseException {
-			Arquivo a = new Arquivo();
+			
+	    	Arquivo a = new Arquivo();
 			
 			/* ---- CONVERTE o CSV no .dat formatado ---- */
 			
@@ -447,6 +451,7 @@ public class Arquivo {
 			 * System.out.println("Terminou!");
 			 */
 			 
+			
 			/* ---- Exibe as linhas do arquivo gerado ---- */
 
 			//a.escreve_arquivo();
@@ -462,6 +467,8 @@ public class Arquivo {
 			//a.busca_registro_nome("ACILDO RICHTER");
 			//a.busca_registro_nome("ADAO PRETTO FILHO");
 			
+	    	
+	    	
 			/* ---- CRIA O ARQUIVO DE INDICE E GERA ID SEQUENCIAL ---- */
 
 			//a.cria_indice_id();
@@ -480,7 +487,8 @@ public class Arquivo {
 			
 			//conta direto no arquivo de dados quantos quandidato se encaixam, e gera um arquivo de indice pra consulta a esses candidatos
 			/*
-			 * float x = a.hashtag1(); System.out.println((int)x +
+			 * float x = a.hashtag1(); 
+			 * System.out.println((int)x +
 			 * " Candidatos tem o status ENSINO FUNDAMENTAL INCOMPLETO ");
 			 * 
 			 * System.out.println(((x*100)/QTD_REG) + "%");
@@ -488,12 +496,15 @@ public class Arquivo {
 			 
 			/* ---- BUSCA BINARIA NO ARQUIVO DE INDICE DOS CANDIDATOS DO FILTRO 1 ---- */
 
-			//a.get_hashtag1(17);
+			//a.get_hashtag1(1);
 			
 			
 			
 			//Exibir todos os candidatos do filtro 1
 			//a.get_allhashtag1();
+			
+			
+			
 			
 			//TESTE do filtro 2
 			/*
@@ -501,15 +512,21 @@ public class Arquivo {
 			 * " Candidatos são AGRICULTORES ");
 			 * 
 			 * System.out.println(((x*100)/QTD_REG) + "%");
-			 * ---- BUSCA BINARIA NO ARQUIVO DE INDICE DOS CANDIDATOS DO FILTRO 1 ---- 
+			 * 
+			 * 
+			 * ---- BUSCA BINARIA NO ARQUIVO DE INDICE DOS CANDIDATOS DO FILTRO 2 ---- 
 			 * a.get_hashtag2(15);
 			 */
 			 
+	    	
 			//a.estatistica();
+			
+			
+			
 			
 			//Faz Hash do Indice do Filtro 2 e retorna um vetor que é a tabela hash
 			
-			ArrayList<String> [] tabela = a.hash();
+			//ArrayList<String> [] tabela = a.hash();
 			
 			//Teste pra buscar o indice 9994 (linha 9995)
 			// 106 é a chave - 1 (chave = 107)

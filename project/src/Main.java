@@ -1,101 +1,110 @@
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
 
-	private static final int kOPC_MOSTRAR_DADOS = 1;
-	private static final int kOPC_PESQUISA_BINARIA = 2;
+	public static void mostraMenu() {
+		System.out.println("\n=-----------------------------------------------------------------------------------=");
+		System.out.println("1 - Mostrar Todas as Linhas do Arquivo");
+		System.out.println("2 - Busca Binária por NOME no arquivo");
+		System.out.println("3 - Busca Binária por ID no Indice");
+		System.out.println("4 - Listar candidatos da Hashtag 1 - Candidatos sem o ensino fundamental completo");
+		System.out.println("5 - Porcentagem de candidatos com ENSINO FUNDAMENTAL INCOMPLETO (Hashtag1)");
+		System.out.println("6 - Verificar se candidato está na Hashtag1");
+		System.out.println("7 - Porcentagem de candidatos que são trabalhadores rurais (Hashtag2)");
+		System.out.println("8 - Cruzar dados de Hashtag1 e Hashtag2 através da pesquisa binária em índice");
+		System.out.println("9 - Verificar se candidato está na Hashtag2 em memoria via hashing CHAVE=107");;
+		System.out.println("10 - Sair");
+		System.out.println("Digite uma opção:");
+		System.out.println("=-----------------------------------------------------------------------------------=\n");
 
-	private static final int kINVALID_VALUE = -1;
-
-	private static final int kREGISTER_LINE_SIZE = 800;
-
-	private static final int kQTD_REGISTERS = 10000;
-
-	private static final String kREGISTERS_FILE_NAME = "./consulta_cand_2020_RS.csv";
-
-	public static void main(String[] args) throws IOException {
-
-		int opc = kINVALID_VALUE;
-
-		RandomAccessFile randomAccessFile = null;
-
-		Scanner sc = new Scanner(System.in);
-		
-
-		try {
-			randomAccessFile = new RandomAccessFile(kREGISTERS_FILE_NAME, "rw");
-			System.out.println(randomAccessFile.length());
-
-		} catch (Exception e) {
-
-			System.out.println("Nao foi possivel abrir o arquivo de registros");
-		}
-		
-
-		while(true){
-
-			showMenu();
-
-			opc = sc.nextInt();
-
-			sc.close();
-
-			switch(opc){
-			
-				case kOPC_MOSTRAR_DADOS:
-
-					System.out.println();
-
-					showAllRegisters(randomAccessFile);
-
-				break;
-
-				case kOPC_PESQUISA_BINARIA:
-					System.out.println(randomAccessFile.length());
-					
-				break;
-			}
-		}		
 	}
 	
-	public static void showMenu() {
-		System.out.println("\n\nOpcoes:");
-		System.out.println("1- Mostrar Dados");
-		System.out.println("2- Pesquisa Binaria");
-		System.out.println("3- Sair");
-		System.out.print("Opcao escolhida: ");
-	}
-
-	public static void showAllRegisters(RandomAccessFile randomAccessFile) throws IOException {
-
-		char[] charReadLine = new char[kREGISTER_LINE_SIZE];
-
-		int lineCount = 0, seekPos = 0, i = 0;
-
-		String currentLine = null;
-
-		randomAccessFile.seek(seekPos);
-
-		while(lineCount < kQTD_REGISTERS)
-		{
-			for(i=0 ; i<kREGISTER_LINE_SIZE ; i++) {
-
-				charReadLine[i] = (char)randomAccessFile.readByte();
-	        	
+	public static void main(String[] args) throws FileNotFoundException, IOException {
+		Scanner read = new Scanner(System.in);
+		Arquivo arquivo = new Arquivo();
+		
+		int opc = 0;
+		
+		while(opc != -1) {
+			mostraMenu();
+			opc = read.nextInt();
+			read.nextLine();
+			switch(opc) {
+			
+			case 1:
+				arquivo.escreve_arquivo();
+				break;
+				
+			case 2:
+				System.out.println("Insira o nome do candidato: \n");
+				String nome = read.nextLine();
+				arquivo.busca_registro_nome(nome.toUpperCase());
+				break;
+				
+			case 3:
+				System.out.println("Insira o ID do candidato: ");
+				int id = read.nextInt();
+				arquivo.busca_registro_indice(id);
+				break;
+				
+			case 4:
+				arquivo.get_allhashtag1();
+				break;
+				
+			case 5:
+				int x = arquivo.hashtag1();
+				System.out.println(x + " Candidatos tem o status ENSINO FUNDAMENTAL INCOMPLETO ");
+				System.out.println("Aproximadamente "+((x*100)/Arquivo.QTD_REG) + "%");
+				break;
+				
+			case 6:
+				System.out.println("Insira o ID do candidato: ");
+				int id1 = read.nextInt();
+				arquivo.get_hashtag1(id1);
+				break;
+				
+			case 7:
+				int x1 = arquivo.hashtag2();
+				System.out.println(x1 + " Candidatos exercem a profissão de AGRICULTORES ");
+				System.out.println("Aproximadamente "+((x1*100)/Arquivo.QTD_REG) + "%");
+				break;
+				
+			case 8:
+				arquivo.estatistica();
+				break;
+				
+			case 9:
+				ArrayList<String> [] tabela = arquivo.hash();
+				System.out.println("Insira o ID do candidato");
+				int x2 = read.nextInt();
+				int hash = x2 % 106;
+				System.out.println("Dado mapeado na posição "+hash);
+				for(int i = 0 ; i < tabela[hash].size() ; i++) {
+						String value = tabela[hash].get(i).split("#")[0];
+						int val = Integer.valueOf(value);
+					 	if(val == x2) {
+					 		System.out.println("Registro enconstrado, candidato: \n");
+					 		System.out.println(arquivo.get_campo(arquivo.get_line(Integer.valueOf(tabela[hash].get(i).split("#")[1])), 5));
+					 	}
+					 	
+					 	if(i == tabela[hash].size() -1) {
+					 		System.out.println("Registro nao encontrado!");
+					 	}
+					 }
+				break;
+				
+			case 10:
+				opc = -1;
+				break;
+				
+			
 			}
-	        
-	        currentLine = new String(charReadLine);
-	        
-	        System.out.print(currentLine);
-
-	        seekPos += kREGISTER_LINE_SIZE;
-
-	        randomAccessFile.seek(seekPos);
-
-	        lineCount++;
-		}		
+			
+		}
 	}
 }
